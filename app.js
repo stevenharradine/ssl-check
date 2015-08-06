@@ -7,6 +7,20 @@ argFlags = processArgs (argFlags)
 
 rankSites ()
 
+function processArgs (argFlags) {
+  argFlags["no-certificate-check"] = false
+
+  for (i in process.argv) {
+    if (i >= 2) {
+      if (process.argv[i] == "no-certificate-check") {
+        argFlags["no-certificate-check"] = true
+      }
+    }
+  }
+
+  return argFlags
+}
+
 function rankSites () {
   for (s in sites) {
     testSiteAllProtocols (sites[s].site, function (site, protocols) {
@@ -33,20 +47,6 @@ function rankSites () {
       console.log (secureState + "\t" + site)
     })
   }
-}
-
-function processArgs (argFlags) {
-  argFlags["no-certificate-check"] = false
-
-  for (i in process.argv) {
-    if (i >= 2) {
-      if (process.argv[i] == "no-certificate-check") {
-        argFlags["no-certificate-check"] = true
-      }
-    }
-  }
-
-  return argFlags
 }
 
 function testSiteAllProtocols (site, callback) {
