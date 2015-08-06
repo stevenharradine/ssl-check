@@ -1,0 +1,9 @@
+{
+  "name": "SSL-Check",
+  "description": "Provides a dashboard of a sites ssl state",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "request": "*"
+  }
+}
