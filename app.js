@@ -5,30 +5,34 @@ var sites_path       = process.argv[2]
 
 argFlags = processArgs (argFlags)
 
-for (s in sites) {
-  testSiteAllProtocols (sites[s].site, function (site, protocols) {
-    var secureState    = "Undefined",
-        protocolSecure = new Array ()
+rankSites ()
 
-    protocolSecure["http"] = false
-    protocolSecure["https"] = false
+function rankSites () {
+  for (s in sites) {
+    testSiteAllProtocols (sites[s].site, function (site, protocols) {
+      var secureState    = "Undefined",
+          protocolSecure = new Array ()
 
-    for (p in protocols) {
-      protocolSecure[protocols[p].protocol] = protocols[p].status
-    }
+      protocolSecure["http"] = false
+      protocolSecure["https"] = false
 
-    if (protocolSecure["http"] && protocolSecure["https"]) {
-      secureState = "High"
-    } else if (protocolSecure["http"] || protocolSecure["https"]) {
-      secureState = "Medium"
-    } else if (!protocolSecure["http"] && !protocolSecure["https"]) {
-      secureState = "Low"
-    } else {
-      secureState = "Unknown State"
-    }
+      for (p in protocols) {
+        protocolSecure[protocols[p].protocol] = protocols[p].status
+      }
 
-    console.log (secureState + "\t" + site)
-  })
+      if (protocolSecure["http"] && protocolSecure["https"]) {
+        secureState = "High"
+      } else if (protocolSecure["http"] || protocolSecure["https"]) {
+        secureState = "Medium"
+      } else if (!protocolSecure["http"] && !protocolSecure["https"]) {
+        secureState = "Low"
+      } else {
+        secureState = "Unknown State"
+      }
+
+      console.log (secureState + "\t" + site)
+    })
+  }
 }
 
 function processArgs (argFlags) {
