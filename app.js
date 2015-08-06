@@ -1,45 +1,61 @@
 var sites   = require("./sites.json"),
     request = require('request')
 
-for (i in sites) {
-  testSiteAllProtocols (sites[i].site)
+for (s in sites) {
+  testSiteAllProtocols (sites[s].site, function (site, protocols) {
+    for (p in protocols) {
+      console.log (protocols[p].status + "\t" + protocols[p].protocol + "://" + site)
+    }
+  })
 }
 
-function testSiteAllProtocols (site) {
-  var protocals = [{
-    "protocal": "http",
+function testSiteAllProtocols (site, callback) {
+  var protocols = [{
+    "protocol": "http",
     "status": "",
   },{
-    "protocal": "https",
+    "protocol": "https",
     "status": "",
   }]
 
-  for (i in protocals) {
-  	var host = protocals[i].protocal + "://" + site
+  for (i in protocols) {
+    var host = protocols[i].protocol + "://" + site
 
-    isSiteSslEnabled (host, function (isSecure, host) {
-    	console.log (isSecure + "\t" + host)
+    isSiteSslEnabled (host, i, function (isSecure, site, index) {
+      var site_split = site.split("://"),
+          site_protocol = site_split[0],
+          site_hostname = site_split[1]
+
+      for (p in protocols) {
+        if (protocols[p].protocol == site_protocol) {
+          protocols[p].status = isSecure
+        }
+      }
+
+      if (index == protocols.length - 1) {
+        callback (site_hostname, protocols)
+      }
     })
   }
 }
 
-function isSiteSslEnabled (site, callback) {
+function isSiteSslEnabled (site, index, callback) {
   options = {
-  	"url": site,
-  	"followRedirect": false
+    "url": site,
+    "followRedirect": false
   }
 
   request(options, function (error, response, body) {
-  	if (!error) {
-  	  if (response.statusCode == 200 && response.request.uri.protocol == "https:") {
-  	    callback (true, site)
-  	  } else if ((response.statusCode == 301 || response.statusCode == 302) && response.headers.location.indexOf ("https") == 0) {
-  	  	callback (true, site)
-  	  } else {
-  	  	callback (false, site)
-  	  }
-  	} else {
-  	  console.log ("Error: " + error)
-  	}
+    if (!error) {
+      if (response.statusCode == 200 && response.request.uri.protocol == "https:") {
+        callback (true, site, index)
+      } else if ((response.statusCode == 301 || response.statusCode == 302) && response.headers.location.indexOf ("https") == 0) {
+        callback (true, site, index)
+      } else {
+        callback (false, site, index)
+      }
+    } else {
+      console.log ("Error: " + error)
+    }
   })
 }
