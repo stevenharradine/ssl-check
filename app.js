@@ -25,9 +25,9 @@ for (s in sites) {
       }
     }
 
-    if (httpSecure  && httpsSecure) {
+    if (httpSecure && httpsSecure) {
       secureState = "High"
-    } else if (httpSecure  || httpsSecure) {
+    } else if (httpSecure || httpsSecure) {
       secureState = "Medium"
     } else if (!httpSecure && !httpsSecure) {
       secureState = "Low"
