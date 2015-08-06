@@ -16,9 +16,9 @@ for (s in sites) {
 
     console.log (
       (
-        httpSecure && httpsSecure ? "High" :
-        httpSecure || httpsSecure ? "Medium" :
-        !httpSecure && !httpsSecure ? "Low" : "Unknown State"
+        httpSecure  && httpsSecure  ? "High"   :
+        httpSecure  || httpsSecure  ? "Medium" :
+        !httpSecure && !httpsSecure ? "Low"    : "Unknown State"
       ) + "\t" + site
     )
   })
