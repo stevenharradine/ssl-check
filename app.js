@@ -1,10 +1,20 @@
-var sites            = require("./sites.json"),
+var sites_path       = process.argv[2]
+    sites            = require("./" + sites_path),
     request          = require('request'),
-    ignoreSelfSigned = true
+    ignoreSelfSigned = false
+
+for (i in process.argv) {
+  if (i >= 2) {
+    if (process.argv[i] == "no-certificate-check") {
+      ignoreSelfSigned = true
+    }
+  }
+}
 
 for (s in sites) {
   testSiteAllProtocols (sites[s].site, function (site, protocols) {
-    var httpSecure  = false,
+    var secureState = "Undefined"
+        httpSecure  = false,
         httpsSecure = false
 
     for (p in protocols) {
@@ -15,13 +25,17 @@ for (s in sites) {
       }
     }
 
-    console.log (
-      (
-        httpSecure  && httpsSecure  ? "High"   :
-        httpSecure  || httpsSecure  ? "Medium" :
-        !httpSecure && !httpsSecure ? "Low"    : "Unknown State"
-      ) + "\t" + site
-    )
+    if (httpSecure  && httpsSecure) {
+      secureState = "High"
+    } else if (httpSecure  || httpsSecure) {
+      secureState = "Medium"
+    } else if (!httpSecure && !httpsSecure) {
+      secureState = "Low"
+    } else {
+      secureState = "Unknown State"
+    }
+
+    console.log (secureState + "\t" + site)
   })
 }
 

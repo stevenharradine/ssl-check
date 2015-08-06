@@ -6,11 +6,23 @@ Provides a dashboard of a sites ssl state
 npm install
 ```
 
-## add sites to sites.json
+## create your own sites.json (or amend the existing one)
+```
+[{
+	"site": "telus.com"
+}]
+```
 
 ## run
+When running the program you need to pass in the sites file as the first argument and then any flags.
 ```
-node app.js
+node app.js sites.json
+```
+
+## flags
+Flags you can add when running:
+```
+no-certificate-check	dont let a self signed certs ruin your day
 ```
 
 ## output
