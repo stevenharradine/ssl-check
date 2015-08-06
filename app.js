@@ -1,5 +1,6 @@
-var sites   = require("./sites.json"),
-    request = require('request')
+var sites            = require("./sites.json"),
+    request          = require('request'),
+    ignoreSelfSigned = true
 
 for (s in sites) {
   testSiteAllProtocols (sites[s].site, function (site, protocols) {
@@ -70,7 +71,11 @@ function isSiteSslEnabled (site, index, callback) {
         callback (false, site, index)
       }
     } else {
-      console.log ("Error: " + error)
+        if (error == "Error: DEPTH_ZERO_SELF_SIGNED_CERT") {
+          callback (ignoreSelfSigned, site, index)
+        } else {
+          callback (false, site, index)
+        }
     }
   })
 }
