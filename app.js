@@ -13,7 +13,7 @@ for (i in process.argv) {
 
 for (s in sites) {
   testSiteAllProtocols (sites[s].site, function (site, protocols) {
-    var secureState = "Undefined"
+    var secureState = "Undefined",
         httpSecure  = false,
         httpsSecure = false
 
