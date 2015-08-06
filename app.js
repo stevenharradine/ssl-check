@@ -41,7 +41,7 @@ function rankSites () {
       } else if (!protocolSecure["http"] && !protocolSecure["https"]) {
         secureState = "Low"
       } else {
-        secureState = "Unknown State"
+        secureState = "Unknown"
       }
 
       console.log (secureState + "\t" + site)
