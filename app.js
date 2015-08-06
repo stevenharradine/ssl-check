@@ -1,35 +1,27 @@
 var sites_path       = process.argv[2]
     sites            = require("./" + sites_path),
     request          = require('request'),
-    ignoreSelfSigned = false
+    argFlags         = new Array ()
 
-for (i in process.argv) {
-  if (i >= 2) {
-    if (process.argv[i] == "no-certificate-check") {
-      ignoreSelfSigned = true
-    }
-  }
-}
+argFlags = processArgs (argFlags)
 
 for (s in sites) {
   testSiteAllProtocols (sites[s].site, function (site, protocols) {
-    var secureState = "Undefined",
-        httpSecure  = false,
-        httpsSecure = false
+    var secureState    = "Undefined",
+        protocolSecure = new Array ()
+
+    protocolSecure["http"] = false
+    protocolSecure["https"] = false
 
     for (p in protocols) {
-      if (protocols[p].protocol == "https") {
-        httpsSecure = protocols[p].status
-      } else if (protocols[p].protocol == "http") {
-        httpSecure = protocols[p].status
-      }
+      protocolSecure[protocols[p].protocol] = protocols[p].status
     }
 
-    if (httpSecure && httpsSecure) {
+    if (protocolSecure["http"] && protocolSecure["https"]) {
       secureState = "High"
-    } else if (httpSecure || httpsSecure) {
+    } else if (protocolSecure["http"] || protocolSecure["https"]) {
       secureState = "Medium"
-    } else if (!httpSecure && !httpsSecure) {
+    } else if (!protocolSecure["http"] && !protocolSecure["https"]) {
       secureState = "Low"
     } else {
       secureState = "Unknown State"
@@ -37,6 +29,20 @@ for (s in sites) {
 
     console.log (secureState + "\t" + site)
   })
+}
+
+function processArgs (argFlags) {
+  argFlags["no-certificate-check"] = false
+
+  for (i in process.argv) {
+    if (i >= 2) {
+      if (process.argv[i] == "no-certificate-check") {
+        argFlags["no-certificate-check"] = true
+      }
+    }
+  }
+
+  return argFlags
 }
 
 function testSiteAllProtocols (site, callback) {
@@ -86,7 +92,7 @@ function isSiteSslEnabled (site, index, callback) {
       }
     } else {
         if (error == "Error: DEPTH_ZERO_SELF_SIGNED_CERT") {
-          callback (ignoreSelfSigned, site, index)
+          callback (argFlags["no-certificate-check"], site, index)
         } else {
           callback (false, site, index)
         }
