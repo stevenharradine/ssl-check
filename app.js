@@ -15,13 +15,15 @@ function testSiteAllProtocols (site) {
   }]
 
   for (i in protocals) {
-    testSite (protocals[i].protocal + "://" + site)
+  	var host = protocals[i].protocal + "://" + site
+
+    isSiteSslEnabled (host, function (isSecure, host) {
+    	console.log (isSecure + "\t" + host)
+    })
   }
 }
 
-function testSite (site) {
-  console.log ("Testing " + site)
-
+function isSiteSslEnabled (site, callback) {
   options = {
   	"url": site,
   	"followRedirect": false
@@ -29,7 +31,13 @@ function testSite (site) {
 
   request(options, function (error, response, body) {
   	if (!error) {
-  	  console.log (response.request.uri.protocol + response.statusCode)
+  	  if (response.statusCode == 200 && response.request.uri.protocol == "https:") {
+  	    callback (true, site)
+  	  } else if ((response.statusCode == 301 || response.statusCode == 302) && response.headers.location.indexOf ("https") == 0) {
+  	  	callback (true, site)
+  	  } else {
+  	  	callback (false, site)
+  	  }
   	} else {
   	  console.log ("Error: " + error)
   	}
