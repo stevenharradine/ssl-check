@@ -5,7 +5,9 @@ var sites_path       = process.argv[2]
 
 argFlags = processArgs (argFlags)
 
-rankSites ()
+rankSites (function (s) {
+  console.log ("Ranked" + s)
+})
 
 function processArgs (argFlags) {
   argFlags["no-certificate-check"] = false
@@ -21,9 +23,9 @@ function processArgs (argFlags) {
   return argFlags
 }
 
-function rankSites () {
+function rankSites (callback) {
   for (s in sites) {
-    testSiteAllProtocols (sites[s].site, function (site, protocols) {
+    testSiteAllProtocols (sites[s].site, s, function (site, s, protocols) {
       var secureState    = "Undefined",
           protocolSecure = new Array ()
 
@@ -45,11 +47,15 @@ function rankSites () {
       }
 
       console.log (secureState + "\t" + site)
+
+      if (s == sites.length - 1) {
+        callback (s)
+      }
     })
   }
 }
 
-function testSiteAllProtocols (site, callback) {
+function testSiteAllProtocols (site, s, callback) {
   var protocols = [{
     "protocol": "http",
     "status": "",
@@ -73,7 +79,7 @@ function testSiteAllProtocols (site, callback) {
       }
 
       if (index == protocols.length - 1) {
-        callback (site_hostname, protocols)
+        callback (site_hostname, s, protocols)
       }
     })
   }
