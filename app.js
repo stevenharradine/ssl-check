@@ -3,9 +3,24 @@ var sites   = require("./sites.json"),
 
 for (s in sites) {
   testSiteAllProtocols (sites[s].site, function (site, protocols) {
+    var httpSecure  = false,
+        httpsSecure = false
+
     for (p in protocols) {
-      console.log (protocols[p].status + "\t" + protocols[p].protocol + "://" + site)
+      if (protocols[p].protocol == "https") {
+        httpsSecure = protocols[p].status
+      } else if (protocols[p].protocol == "http") {
+        httpSecure = protocols[p].status
+      }
     }
+
+    console.log (
+      (
+        httpSecure && httpsSecure ? "High" :
+        httpSecure || httpsSecure ? "Medium" :
+        !httpSecure && !httpsSecure ? "Low" : "Unknown State"
+      ) + "\t" + site
+    )
   })
 }
 
