@@ -5,8 +5,10 @@ var sites_path       = process.argv[2]
 
 argFlags = processArgs (argFlags)
 
-rankSites (function (s) {
-  console.log ("Ranked" + s)
+rankSites (function (site_data) {
+  for (i in site_data) {
+    console.log (site_data[i].status + "\t" + site_data[i].site)
+  }
 })
 
 function processArgs (argFlags) {
@@ -24,6 +26,8 @@ function processArgs (argFlags) {
 }
 
 function rankSites (callback) {
+  var site_data = new Array ()
+
   for (s in sites) {
     testSiteAllProtocols (sites[s].site, s, function (site, s, protocols) {
       var secureState    = "Undefined",
@@ -46,10 +50,13 @@ function rankSites (callback) {
         secureState = "Unknown"
       }
 
-      console.log (secureState + "\t" + site)
+      site_data.push ({
+        "site": site,
+        "status": secureState
+      })
 
       if (s == sites.length - 1) {
-        callback (s)
+        callback (site_data)
       }
     })
   }
