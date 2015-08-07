@@ -133,7 +133,6 @@ function isSiteSslEnabled (site, index, callback) {
         if (error == "Error: DEPTH_ZERO_SELF_SIGNED_CERT") {
           callback (argFlags["no-certificate-check"], site, index)
         } else {
-          console.log (site + ">>>>>>>>>>" + error)
           callback (false, site, index)
         }
     }
