@@ -6,9 +6,27 @@ var sites_path       = process.argv[2]
 argFlags = processArgs (argFlags)
 
 rankSites (function (site_data) {
+  var sums = new Array ()
+  sums["High"] = 0
+  sums["Medium"] = 0
+  sums["Low"] = 0
+  sums["Total"] = 0
+
   for (i in site_data) {
     console.log (site_data[i].status + "\t" + site_data[i].site)
+
+    sums[site_data[i].status]++
+    sums["Total"]++
   }
+
+  console.log ("")
+  console.log ("Results")
+  console.log ("*******")
+  console.log ("High:\t"   + sums["High"])
+  console.log ("Medium:\t" + sums["Medium"])
+  console.log ("Low:\t"    + sums["Low"])
+  console.log ("\t---")
+  console.log ("Total:\t"  + sums["Total"])
 })
 
 function processArgs (argFlags) {
@@ -26,9 +44,11 @@ function processArgs (argFlags) {
 }
 
 function rankSites (callback) {
-  var site_data = new Array ()
+  var site_data = new Array (),
+      callback_counter = 0
 
   for (s in sites) {
+    console.log (">"+s + ":" + sites.length + ":" + (s == sites.length - 1))
     testSiteAllProtocols (sites[s].site, s, function (site, s, protocols) {
       var secureState    = "Undefined",
           protocolSecure = new Array ()
@@ -55,7 +75,9 @@ function rankSites (callback) {
         "status": secureState
       })
 
-      if (s == sites.length - 1) {
+      callback_counter++
+
+      if (callback_counter == sites.length) {
         callback (site_data)
       }
     })
@@ -111,6 +133,7 @@ function isSiteSslEnabled (site, index, callback) {
         if (error == "Error: DEPTH_ZERO_SELF_SIGNED_CERT") {
           callback (argFlags["no-certificate-check"], site, index)
         } else {
+          console.log (site + ">>>>>>>>>>" + error)
           callback (false, site, index)
         }
     }
