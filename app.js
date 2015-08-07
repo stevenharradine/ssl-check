@@ -48,7 +48,6 @@ function rankSites (callback) {
       callback_counter = 0
 
   for (s in sites) {
-    console.log (">"+s + ":" + sites.length + ":" + (s == sites.length - 1))
     testSiteAllProtocols (sites[s].site, s, function (site, s, protocols) {
       var secureState    = "Undefined",
           protocolSecure = new Array ()
