@@ -13,8 +13,6 @@ rankSites (function (site_data) {
   sums["Total"] = 0
 
   for (i in site_data) {
-    console.log (site_data[i].status + "\t" + site_data[i].site)
-
     sums[site_data[i].status]++
     sums["Total"]++
   }
@@ -68,6 +66,8 @@ function rankSites (callback) {
       } else {
         secureState = "Unknown"
       }
+
+      console.log (secureState + "\t" + site)
 
       site_data.push ({
         "site": site,
