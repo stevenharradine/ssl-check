@@ -28,12 +28,12 @@ rankSites (function (site_data) {
 })
 
 function processArgs (argFlags) {
-  argFlags["no-certificate-check"] = false
+  argFlags["allow-self-signed"] = false
 
   for (i in process.argv) {
     if (i >= 2) {
-      if (process.argv[i] == "no-certificate-check") {
-        argFlags["no-certificate-check"] = true
+      if (process.argv[i] == "--allow-self-signed") {
+        argFlags["allow-self-signed"] = true
       }
     }
   }
@@ -130,7 +130,7 @@ function isSiteSslEnabled (site, index, callback) {
       }
     } else {
         if (error == "Error: DEPTH_ZERO_SELF_SIGNED_CERT") {
-          callback (argFlags["no-certificate-check"], site, index)
+          callback (argFlags["allow-self-signed"], site, index)
         } else {
           callback (false, site, index)
         }
