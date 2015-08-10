@@ -9,7 +9,7 @@ npm install
 ## create your own sites.json (or amend the existing one)
 ```
 [{
-	"site": "telus.com"
+	"site": "google.com"
 }]
 ```
 
@@ -22,7 +22,7 @@ node app.js sites.json
 ## flags
 Flags you can add when running:
 ```
-no-certificate-check	dont let a self signed certs ruin your day
+--allow-self-signed	dont let a self signed certs ruin your day
 ```
 
 ## output
