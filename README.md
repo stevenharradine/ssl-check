@@ -28,7 +28,7 @@ Flags you can add when running:
 ## output
 You will get a rating for your site.
 ```
-High	https enabled and redirecting http traffic to it
-Medium	https is enabled but not redirecting traffic
-Low		https is not enabled
+High    http AND https resolve securely
+Medium  http OR  https resolves securely
+Low     http AND https do not resolve securely
 ```
