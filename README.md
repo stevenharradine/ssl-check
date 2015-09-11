@@ -10,6 +10,8 @@ npm install
 ```
 [{
 	"site": "google.com"
+},{
+	"site": "bing.com"
 }]
 ```
 
