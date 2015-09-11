@@ -22,7 +22,7 @@ node app.js sites.json
 ## flags
 Flags you can add when running:
 ```
---allow-self-signed	dont let a self signed certs ruin your day
+--allow-self-signed	allow self signed certs to pass
 ```
 
 ## output
