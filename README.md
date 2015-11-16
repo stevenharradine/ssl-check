@@ -18,7 +18,7 @@ npm install
 ## run
 When running the program you need to pass in the sites file as the first argument and then any flags.
 ```
-node app.js sites.json
+node ssl-check.js sites.json
 ```
 
 ## flags
